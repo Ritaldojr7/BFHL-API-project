@@ -1,0 +1,19 @@
+{
+  "name": "bfhl-api",
+  "version": "1.0.0",
+  "description": "BFHL coding task REST API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
