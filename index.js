@@ -1,82 +1,56 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const app = express();
-const PORT = process.env.PORT || 3000;
 
+const app = express();
 app.use(bodyParser.json());
 
-
-const FULL_NAME = "ritwik_mukherjee"; 
-const DOB_DDMMYYYY = "25092001";   
-const EMAIL = "ritwik.mukherjee68@gmail.com";
-const ROLL_NUMBER = "22BHI10088";
-
-
-app.post("/bfhl", (req, res) => {
-  try {
-    const inputData = req.body.data;
-
-    if (!Array.isArray(inputData)) {
-      return res.status(400).json({
-        is_success: false,
-        message: "Invalid input, 'data' must be an array",
-      });
-    }
-
-
-    let odd_numbers = [];
-    let even_numbers = [];
-    let alphabets = [];
-    let special_characters = [];
-    let sum = 0;
-
-    inputData.forEach((item) => {
-      if (/^-?\d+$/.test(item)) {
-      
-        const num = parseInt(item, 10);
-        if (num % 2 === 0) {
-          even_numbers.push(item); 
-        } else {
-          odd_numbers.push(item);
-        }
-        sum += num;
-      } else if (/^[a-zA-Z]+$/.test(item)) {
-        // It's an alphabet word
-        alphabets.push(item.toUpperCase());
-      } else {
-       
-        special_characters.push(item);
-      }
-    });
-
-   
-    let concat_string = "";
-    const reversed = alphabets.join("").split("").reverse();
-    reversed.forEach((ch, idx) => {
-      concat_string += idx % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase();
-    });
-
-    res.json({
-      is_success: true,
-      user_id: `${FULL_NAME}_${DOB_DDMMYYYY}`,
-      email: EMAIL,
-      roll_number: ROLL_NUMBER,
-      odd_numbers,
-      even_numbers,
-      alphabets,
-      special_characters,
-      sum: sum.toString(),   
-      concat_string,
-    });
-  } catch (error) {
-    res.status(500).json({
-      is_success: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
+// GET /bfhl endpoint
+app.get("/bfhl", (req, res) => {
+  res.json({ operation_code: 1 });
 });
 
+// POST /bfhl endpoint
+app.post("/bfhl", (req, res) => {
+  const { data } = req.body;
+
+  let numbers = [];
+  let alphabets = [];
+  let specialCharacters = [];
+
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      if (!isNaN(item) && item.trim() !== "") {
+        numbers.push(item); // keep numbers as strings
+      } else if (/^[a-zA-Z]$/.test(item)) {
+        alphabets.push(item);
+      } else {
+        specialCharacters.push(item);
+      }
+    });
+  }
+
+  // Separate even and odd numbers
+  let odd_numbers = numbers.filter((n) => parseInt(n) % 2 !== 0);
+  let even_numbers = numbers.filter((n) => parseInt(n) % 2 === 0);
+
+  // Concatenate alphabets (keep case as given, then add capitalized first one)
+  let concat_string = alphabets.length > 0 ? alphabets.join("") : "";
+
+  res.json({
+    is_success: true,
+    user_id: "ritwik_mukherjee_25092001",
+    email: "ritwik.mukherjee68@gmail.com",
+    roll_number: "22BHI10088",
+    odd_numbers,
+    even_numbers,
+    alphabets,
+    special_characters: specialCharacters,
+    sum: numbers.reduce((acc, n) => acc + parseInt(n), 0).toString(), // return as string
+    concat_string
+  });
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`BFHL API listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
