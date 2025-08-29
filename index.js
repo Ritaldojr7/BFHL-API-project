@@ -5,12 +5,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-// ---- USER CONFIG ----
-const FULL_NAME = "ritwik_mukherjee";  // must be lowercase, underscores between names
-const DOB_DDMMYYYY = "25092001";       // ddmmyyyy format
+
+const FULL_NAME = "ritwik_mukherjee"; 
+const DOB_DDMMYYYY = "25092001";   
 const EMAIL = "ritwik.mukherjee68@gmail.com";
 const ROLL_NUMBER = "22BHI10088";
-// ---------------------
+
 
 app.post("/bfhl", (req, res) => {
   try {
@@ -23,7 +23,7 @@ app.post("/bfhl", (req, res) => {
       });
     }
 
-    // ✅ Initialize as arrays (important!)
+
     let odd_numbers = [];
     let even_numbers = [];
     let alphabets = [];
@@ -32,24 +32,24 @@ app.post("/bfhl", (req, res) => {
 
     inputData.forEach((item) => {
       if (/^-?\d+$/.test(item)) {
-        // It's a number
+      
         const num = parseInt(item, 10);
         if (num % 2 === 0) {
-          even_numbers.push(item); // keep as string
+          even_numbers.push(item); 
         } else {
-          odd_numbers.push(item);  // keep as string
+          odd_numbers.push(item);
         }
         sum += num;
       } else if (/^[a-zA-Z]+$/.test(item)) {
         // It's an alphabet word
         alphabets.push(item.toUpperCase());
       } else {
-        // Special character
+       
         special_characters.push(item);
       }
     });
 
-    // Build concat string from alphabets (reverse, alternating caps)
+   
     let concat_string = "";
     const reversed = alphabets.join("").split("").reverse();
     reversed.forEach((ch, idx) => {
@@ -65,7 +65,7 @@ app.post("/bfhl", (req, res) => {
       even_numbers,
       alphabets,
       special_characters,
-      sum: sum.toString(),   // return sum as string
+      sum: sum.toString(),   
       concat_string,
     });
   } catch (error) {
